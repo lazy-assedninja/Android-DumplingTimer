@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/option">
+
+    <fragment
+        android:id="@+id/option"
+        android:name="me.lazy_assedninja.android_dumpling_timer.ui.OptionFragment"
+        tools:layout="@layout/fragment_option">
+
+        <action
+            android:id="@+id/to_timer_fragment"
+            app:destination="@id/timer"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+
+        <action
+            android:id="@+id/to_setting_fragment"
+            app:destination="@id/setting"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/setting"
+        android:name="me.lazy_assedninja.android_dumpling_timer.ui.SettingFragment"
+        tools:layout="@layout/fragment_setting" />
+
+    <fragment
+        android:id="@+id/timer"
+        android:name="me.lazy_assedninja.android_dumpling_timer.ui.TimerFragment"
+        tools:layout="@layout/fragment_timer" />
+</navigation>

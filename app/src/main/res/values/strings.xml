@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">Android-DumplingTimer</string>
+    <string name="app_name">DumplingTimer</string>
+
+    <!-- Option -->
+    <string name="timer">計時器</string>
+    <string name="setting">設定</string>
+
+    <!-- Setting -->
+    <string name="base_time">第一層蒸籠完全蒸熟所需總時間</string>
+    <string name="gap_time">各層蒸籠蒸熟所需之時間差</string>
+    <string name="sound_effect_time">提示音效</string>
+    <string name="Finish">完成</string>
+
+    <string name="hint_base_time">基礎時間/秒</string>
+    <string name="hint_gap_time">間隔時間/秒</string>
+    <string name="hint_sound_effect_time">時長/秒</string>
 </resources>
