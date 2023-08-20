@@ -4,6 +4,7 @@
     <!-- Option -->
     <string name="timer">計時器</string>
     <string name="setting">設定</string>
+    <string name="toast_set_time_first">時間尚未設定</string>
     
     <!-- Timer -->
     <string name="toast_up_to_limit">已達上限</string>
