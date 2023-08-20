@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import me.lazy_assedninja.android_dumpling_timer.R
 import me.lazy_assedninja.android_dumpling_timer.databinding.FragmentTimerBinding
 import me.lazy_assedninja.android_dumpling_timer.ui.base.BaseFragment
+import me.lazy_assedninja.android_dumpling_timer.util.SoundEffectUtils
 import me.lazy_assedninja.android_dumpling_timer.util.autoCleared
 import timber.log.Timber
 
@@ -40,6 +41,8 @@ class TimerFragment : BaseFragment() {
     private var countDownTimer2: CountDownTimer? = null
     private var countDownTimer3: CountDownTimer? = null
     private var countDownTimer4: CountDownTimer? = null
+
+    private var soundEffectUtils: SoundEffectUtils? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentTimerBinding.inflate(inflater, container, false).apply {
@@ -118,6 +121,8 @@ class TimerFragment : BaseFragment() {
 
                 if (viewModel.list4.size == 1) countDownTimer4 = createCountDownTimer4().start()
             }
+
+            soundEffectUtils = SoundEffectUtils(root.context)
         }
     }
 
@@ -139,6 +144,8 @@ class TimerFragment : BaseFragment() {
 
             if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
             dialog.addData(item)
+
+            soundEffectUtils?.playWarningSound()
 
             if (viewModel.list1.isEmpty()) return
 
@@ -165,6 +172,8 @@ class TimerFragment : BaseFragment() {
             if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
             dialog.addData(item)
 
+            soundEffectUtils?.playWarningSound()
+
             if (viewModel.list2.isEmpty()) return
 
             countDownTimer2 = createCountDownTimer2().start()
@@ -189,6 +198,8 @@ class TimerFragment : BaseFragment() {
 
             if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
             dialog.addData(item)
+
+            soundEffectUtils?.playWarningSound()
 
             if (viewModel.list3.isEmpty()) return
 
@@ -215,14 +226,16 @@ class TimerFragment : BaseFragment() {
             if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
             dialog.addData(item)
 
+            soundEffectUtils?.playWarningSound()
+
             if (viewModel.list4.isEmpty()) return
 
             countDownTimer4 = createCountDownTimer4().start()
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        // TODO 暫停或清除所有CountDownTimer
+    override fun onDestroy() {
+        super.onDestroy()
+        soundEffectUtils?.release()
     }
 }
