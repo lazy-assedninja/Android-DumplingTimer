@@ -15,5 +15,5 @@ interface SettingDao {
     fun insert(setting: Setting)
 
     @Query("SELECT * FROM setting WHERE id = :id")
-    fun get(id: Long): Flow<Setting>
+    fun get(id: Long): Flow<Setting?>
 }

@@ -1,7 +1,6 @@
 package me.lazy_assedninja.android_dumpling_timer.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import kotlinx.coroutines.launch
 import me.lazy_assedninja.android_dumpling_timer.databinding.FragmentSettingBinding
 import me.lazy_assedninja.android_dumpling_timer.ui.base.BaseFragment
 import me.lazy_assedninja.android_dumpling_timer.util.autoCleared
-import timber.log.Timber
 
 class SettingFragment : BaseFragment() {
 
@@ -32,13 +30,14 @@ class SettingFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             btFinish.setOnClickListener {
-                viewModel.setSetting(etBaseTime.text.toString().toInt(), etGapTime.text.toString().toInt(), etSoundEffectTime.text.toString().toInt())
+                viewModel.setSetting(etBaseTime.text.toString().toLong(), etGapTime.text.toString().toLong(), etSoundEffectTime.text.toString().toLong())
                 requireActivity().onBackPressed()
             }
 
             lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.setting.collect {
+                        if (it == null) return@collect
                         etBaseTime.setText(it.baseTime.toString())
                         etGapTime.setText(it.gapTime.toString())
                         etSoundEffectTime.setText(it.soundEffectTime.toString())
