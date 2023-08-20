@@ -23,12 +23,12 @@
     </fragment>
 
     <fragment
-        android:id="@+id/setting"
-        android:name="me.lazy_assedninja.android_dumpling_timer.ui.SettingFragment"
-        tools:layout="@layout/fragment_setting" />
-
-    <fragment
         android:id="@+id/timer"
         android:name="me.lazy_assedninja.android_dumpling_timer.ui.TimerFragment"
         tools:layout="@layout/fragment_timer" />
+
+    <fragment
+        android:id="@+id/setting"
+        android:name="me.lazy_assedninja.android_dumpling_timer.ui.SettingFragment"
+        tools:layout="@layout/fragment_setting" />
 </navigation>

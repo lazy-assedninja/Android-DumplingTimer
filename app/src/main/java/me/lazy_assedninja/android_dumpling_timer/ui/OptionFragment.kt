@@ -23,12 +23,6 @@ class OptionFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // This page doesn't need back pressed so I disable it.
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {}
-        })
-
         binding.btTimer.setOnClickListener {
             findNavController().navigate(OptionFragmentDirections.toTimerFragment())
         }
