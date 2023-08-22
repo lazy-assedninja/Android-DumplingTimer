@@ -138,6 +138,8 @@ class TimerFragment : BaseFragment() {
         }
 
         override fun onFinish() {
+            viewModel.resetList(viewModel.list1)
+
             val item = viewModel.list1.removeFirst()
             adapter1.submitList(viewModel.list1.toList())
             countDownTimer1?.cancel()
@@ -165,6 +167,8 @@ class TimerFragment : BaseFragment() {
         }
 
         override fun onFinish() {
+            viewModel.resetList(viewModel.list2)
+
             val item = viewModel.list2.removeFirst()
             adapter2.submitList(viewModel.list2.toList())
             countDownTimer2?.cancel()
@@ -192,6 +196,8 @@ class TimerFragment : BaseFragment() {
         }
 
         override fun onFinish() {
+            viewModel.resetList(viewModel.list3)
+
             val item = viewModel.list3.removeFirst()
             adapter3.submitList(viewModel.list3.toList())
             countDownTimer3?.cancel()
@@ -219,6 +225,8 @@ class TimerFragment : BaseFragment() {
         }
 
         override fun onFinish() {
+            viewModel.resetList(viewModel.list4)
+
             val item = viewModel.list4.removeFirst()
             adapter4.submitList(viewModel.list4.toList())
             countDownTimer4?.cancel()

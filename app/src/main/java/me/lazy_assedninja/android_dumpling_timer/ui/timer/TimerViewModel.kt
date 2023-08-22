@@ -60,4 +60,11 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
 
         return currentTimerList.removeLast()
     }
+
+    fun resetList(list: List<Time>) {
+        list.forEachIndexed { index, time ->
+            time.time = ((time.time.toFloat() / ((setting?.baseTime ?: 0) + (setting?.gapTime ?: 0) * index))
+                    * (setting?.baseTime ?: 0) + (setting?.gapTime ?: 0) * (index - 1)).toLong()
+        }
+    }
 }
