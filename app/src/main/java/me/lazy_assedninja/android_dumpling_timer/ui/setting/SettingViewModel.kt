@@ -26,9 +26,9 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
     private val _setting: MutableSharedFlow<Setting?> = MutableSharedFlow()
     val setting: SharedFlow<Setting?> = _setting
 
-    fun setSetting(baseTime: Long, gapTime: Long, soundEffectTime: Long) {
+    fun setSetting(baseTime: Long, gapTime: Long, soundEffectLoopTime: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.setSetting(baseTime, gapTime, soundEffectTime)
+            repository.setSetting(baseTime, gapTime, soundEffectLoopTime)
         }
     }
 }

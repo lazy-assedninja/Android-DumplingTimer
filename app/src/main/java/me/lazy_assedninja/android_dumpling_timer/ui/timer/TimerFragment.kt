@@ -145,7 +145,7 @@ class TimerFragment : BaseFragment() {
             if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
             dialog.addData(item)
 
-            soundEffectUtils?.playWarningSound()
+            soundEffectUtils?.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
 
             if (viewModel.list1.isEmpty()) return
 
@@ -172,7 +172,7 @@ class TimerFragment : BaseFragment() {
             if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
             dialog.addData(item)
 
-            soundEffectUtils?.playWarningSound()
+            soundEffectUtils?.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
 
             if (viewModel.list2.isEmpty()) return
 
@@ -199,7 +199,7 @@ class TimerFragment : BaseFragment() {
             if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
             dialog.addData(item)
 
-            soundEffectUtils?.playWarningSound()
+            soundEffectUtils?.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
 
             if (viewModel.list3.isEmpty()) return
 
@@ -226,7 +226,7 @@ class TimerFragment : BaseFragment() {
             if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
             dialog.addData(item)
 
-            soundEffectUtils?.playWarningSound()
+            soundEffectUtils?.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
 
             if (viewModel.list4.isEmpty()) return
 

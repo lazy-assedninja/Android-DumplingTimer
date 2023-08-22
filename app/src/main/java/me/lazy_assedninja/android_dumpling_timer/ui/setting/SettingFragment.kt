@@ -30,7 +30,7 @@ class SettingFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             btFinish.setOnClickListener {
-                viewModel.setSetting(etBaseTime.text.toString().toLong(), etGapTime.text.toString().toLong(), etSoundEffectTime.text.toString().toLong())
+                viewModel.setSetting(etBaseTime.text.toString().toLong(), etGapTime.text.toString().toLong(), etSoundEffectLoopTime.text.toString().toInt())
                 requireActivity().onBackPressed()
             }
 
@@ -40,7 +40,7 @@ class SettingFragment : BaseFragment() {
                         if (it == null) return@collect
                         etBaseTime.setText(it.baseTime.toString())
                         etGapTime.setText(it.gapTime.toString())
-                        etSoundEffectTime.setText(it.soundEffectTime.toString())
+                        etSoundEffectLoopTime.setText(it.soundEffectLoopTime.toString())
                     }
                 }
             }

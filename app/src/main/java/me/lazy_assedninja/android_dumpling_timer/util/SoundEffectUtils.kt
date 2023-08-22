@@ -14,15 +14,11 @@ class SoundEffectUtils(val context: Context) {
 
     private val soundWarning = soundPool.load(context, R.raw.warning, 0)
 
-    fun playWarningSound() {
-        play(soundWarning)
+    fun playWarningSound(loop: Int) {
+        soundPool.play(soundWarning, VOLUME, VOLUME, 0, loop, 1F)
     }
 
     fun release() {
         soundPool.release()
-    }
-
-    private fun play(soundID: Int) {
-        soundPool.play(soundID, VOLUME, VOLUME, 0, 0, 1F)
     }
 }
