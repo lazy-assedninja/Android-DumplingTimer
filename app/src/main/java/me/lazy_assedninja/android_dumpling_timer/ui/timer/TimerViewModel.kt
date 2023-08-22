@@ -29,11 +29,11 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
 
     var setting: Setting? = null
 
-    private var currentTimerList = 0 // 用於返回上一步時判斷最新新增之List
+    private var currentTimerList = mutableListOf<Int>() // 用於返回上一步時判斷最新新增之List
 
     fun addData(listID: Int) {
-        currentTimerList = listID
-        val list = when (currentTimerList) {
+        currentTimerList.add(listID)
+        val list = when (listID) {
             1 -> list2
             2 -> list3
             3 -> list4
@@ -46,7 +46,9 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun revertData(): Int {
-        val list = when (currentTimerList) {
+        if (currentTimerList.isEmpty()) return -1
+
+        val list = when (currentTimerList.last()) {
             1 -> list2
             2 -> list3
             3 -> list4
@@ -54,6 +56,6 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
         }
         if (list.isNotEmpty()) list.removeLast()
 
-        return currentTimerList
+        return currentTimerList.removeLast()
     }
 }

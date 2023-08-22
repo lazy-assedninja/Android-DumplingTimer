@@ -54,18 +54,19 @@ class TimerFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel // For init.
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                when (viewModel.revertData()) {
-                    0 -> adapter1.submitList(viewModel.list1.toList())
-                    1 -> adapter2.submitList(viewModel.list2.toList())
-                    2 -> adapter3.submitList(viewModel.list3.toList())
-                    3 -> adapter4.submitList(viewModel.list4.toList())
-                }
-            }
-        })
-
         binding.apply {
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    when (viewModel.revertData()) {
+                        0 -> adapter1.submitList(viewModel.list1.toList())
+                        1 -> adapter2.submitList(viewModel.list2.toList())
+                        2 -> adapter3.submitList(viewModel.list3.toList())
+                        3 -> adapter4.submitList(viewModel.list4.toList())
+                        -1 -> Toast.makeText(root.context, R.string.toast_no_previous_step, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            })
+
             (rv1.layoutManager as LinearLayoutManager).reverseLayout = true
             (rv2.layoutManager as LinearLayoutManager).reverseLayout = true
             (rv3.layoutManager as LinearLayoutManager).reverseLayout = true

@@ -8,6 +8,7 @@
     
     <!-- Timer -->
     <string name="toast_up_to_limit">已達上限</string>
+    <string name="toast_no_previous_step">無上一步</string>
 
     <!-- Setting -->
     <string name="base_time">第一層蒸籠完全蒸熟所需總時間</string>
