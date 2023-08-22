@@ -1,4 +1,4 @@
-package me.lazy_assedninja.android_dumpling_timer.ui
+package me.lazy_assedninja.android_dumpling_timer.ui.setting
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

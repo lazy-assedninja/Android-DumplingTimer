@@ -1,5 +1,4 @@
 pluginManagement {
-
     repositories {
         google()
         mavenCentral()
@@ -7,10 +6,9 @@ pluginManagement {
     }
 }
 
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
-
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-
     repositories {
         google()
         mavenCentral()
@@ -18,4 +16,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Android-DumplingTimer"
-include ':app'
+include(":app")

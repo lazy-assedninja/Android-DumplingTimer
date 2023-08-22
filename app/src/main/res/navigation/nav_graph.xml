@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/option"
-        android:name="me.lazy_assedninja.android_dumpling_timer.ui.OptionFragment"
+        android:name="me.lazy_assedninja.android_dumpling_timer.ui.option.OptionFragment"
         tools:layout="@layout/fragment_option">
 
         <action
@@ -24,11 +24,11 @@
 
     <fragment
         android:id="@+id/timer"
-        android:name="me.lazy_assedninja.android_dumpling_timer.ui.TimerFragment"
+        android:name="me.lazy_assedninja.android_dumpling_timer.ui.timer.TimerFragment"
         tools:layout="@layout/fragment_timer" />
 
     <fragment
         android:id="@+id/setting"
-        android:name="me.lazy_assedninja.android_dumpling_timer.ui.SettingFragment"
+        android:name="me.lazy_assedninja.android_dumpling_timer.ui.setting.SettingFragment"
         tools:layout="@layout/fragment_setting" />
 </navigation>

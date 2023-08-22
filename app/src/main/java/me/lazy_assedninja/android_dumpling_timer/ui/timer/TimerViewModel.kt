@@ -1,7 +1,6 @@
-package me.lazy_assedninja.android_dumpling_timer.ui
+package me.lazy_assedninja.android_dumpling_timer.ui.timer
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
