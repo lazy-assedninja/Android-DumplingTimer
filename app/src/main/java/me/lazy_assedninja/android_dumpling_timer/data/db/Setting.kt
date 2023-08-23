@@ -8,6 +8,6 @@ import androidx.room.PrimaryKey
 data class Setting(
     @PrimaryKey val id: Int,
     @ColumnInfo(name = "base_time") val baseTime: Long,
-    @ColumnInfo(name = "gap_time") val gapTime: Long,
+    @ColumnInfo(name = "gap_time") val gapTimeList: List<Long>,
     @ColumnInfo(name = "sound_effect_loop_time") val soundEffectLoopTime: Int
 )

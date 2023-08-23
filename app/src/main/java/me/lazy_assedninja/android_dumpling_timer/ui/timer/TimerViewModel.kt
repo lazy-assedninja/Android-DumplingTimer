@@ -4,6 +4,8 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import me.lazy_assedninja.android_dumpling_timer.data.db.Setting
 import me.lazy_assedninja.android_dumpling_timer.data.repository.SettingRepository
@@ -14,57 +16,70 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: SettingRepository
 
+    private lateinit var firepowerList: MutableList<Float>
     val list1 = mutableListOf<Time>()
     val list2 = mutableListOf<Time>()
     val list3 = mutableListOf<Time>()
     val list4 = mutableListOf<Time>()
 
+    var setting: Setting? = null
+
+    private val _initSettingFinished = MutableSharedFlow<Unit>()
+    val initSettingFinished: SharedFlow<Unit> = _initSettingFinished
+
+    private var currentTimerList = mutableListOf<Int>() // 用於返回上一步時判斷最新新增之List
+
     init {
         repository = SettingRepository(application)
         viewModelScope.launch {
             repository.getSetting().collect {
-                Log.d("xxxxx", "setting: $it")
                 setting = it
+
+                firepowerList = mutableListOf(1F)
+                setting?.gapTimeList?.forEachIndexed { index, _ ->
+                    var gap = 0F
+                    for (i in 0..index) {
+                        gap += firepowerList[i] * (setting?.gapTimeList?.get(index - i) ?: 0)
+                    }
+                    firepowerList.add(((setting?.baseTime ?: 0) - gap) / (setting?.baseTime ?: 0))
+                }
+
+                _initSettingFinished.emit(Unit)
+
+                Timber.tag("xxxxx").d("firepowerList: $firepowerList")
             }
         }
     }
 
-    var setting: Setting? = null
-
-    private var currentTimerList = mutableListOf<Int>() // 用於返回上一步時判斷最新新增之List
-
     fun addData(listID: Int) {
         currentTimerList.add(listID)
-        val list = when (listID) {
+
+        when (listID) {
             1 -> list2
             2 -> list3
             3 -> list4
             else -> list1
-        }
-
-        Timber.tag("xxxxx").d("setting: $setting, baseTime: ${setting?.baseTime}, extra time: ${(setting?.gapTime ?: 0) * (list.size)}")
-
-        list.add(Time(listID + 1, (setting?.baseTime ?: 0) + (setting?.gapTime ?: 0) * (list.size)))
+        }.add(Time(listID + 1, (setting?.baseTime ?: 0).toDouble()))
     }
 
-    fun revertData(): Int {
-        if (currentTimerList.isEmpty()) return -1
-
-        val list = when (currentTimerList.last()) {
+    fun revertData() = if (currentTimerList.isEmpty()) -1 else currentTimerList.removeLast().apply {
+        when (this) {
             1 -> list2
             2 -> list3
             3 -> list4
             else -> list1
-        }
-        if (list.isNotEmpty()) list.removeLast()
-
-        return currentTimerList.removeLast()
+        }.removeLast()
     }
 
-    fun resetList(list: List<Time>) {
-        list.forEachIndexed { index, time ->
-            time.time = ((time.time.toFloat() / ((setting?.baseTime ?: 0) + (setting?.gapTime ?: 0) * index))
-                    * (setting?.baseTime ?: 0) + (setting?.gapTime ?: 0) * (index - 1)).toLong()
+    fun onTick(listID: Int) {
+        when (listID) {
+            1 -> list2
+            2 -> list3
+            3 -> list4
+            else -> list1
+        }.forEachIndexed { index, time ->
+            Timber.tag("xxxxx").d("onTick: ${time.percentage}")
+            time.percentage -= firepowerList[index]
         }
     }
 }

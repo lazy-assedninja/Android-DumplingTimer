@@ -9,16 +9,12 @@ import androidx.fragment.app.DialogFragment
 import me.lazy_assedninja.android_dumpling_timer.data.vo.Time
 import me.lazy_assedninja.android_dumpling_timer.databinding.DialogDoneBinding
 import me.lazy_assedninja.android_dumpling_timer.util.autoCleared
-import timber.log.Timber
 
 class DoneDialog : DialogFragment() {
 
     private var binding by autoCleared<DialogDoneBinding>()
 
-    private val adapter = TimerRVAdapter(Type.Done) {
-        Timber.tag("yyy").d("dismiss")
-        dismiss()
-    }
+    private val adapter = DoneRVAdapter { dismiss() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DialogDoneBinding.inflate(inflater, container, false).apply {
@@ -45,7 +41,6 @@ class DoneDialog : DialogFragment() {
     fun addData(item: Time) {
         adapter.submitList(adapter.currentList.toMutableList().apply {
             add(item)
-            Timber.tag("yyy").d("$this")
         })
     }
 }

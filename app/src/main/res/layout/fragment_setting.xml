@@ -27,26 +27,104 @@
             android:hint="@string/hint_base_time"
             android:importantForAutofill="no"
             android:inputType="time"
-            app:layout_constraintBottom_toTopOf="@id/et_gap_time"
+            app:layout_constraintBottom_toTopOf="@id/et_gap_time_1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_base_time"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
-            android:id="@+id/tv_gap_time"
+            android:id="@+id/tv_gap_time_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/gap_time"
+            android:text="@string/gap_time_1"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/et_gap_time"
-            app:layout_constraintEnd_toStartOf="@id/et_gap_time"
+            app:layout_constraintBottom_toBottomOf="@id/et_gap_time_1"
+            app:layout_constraintEnd_toStartOf="@id/et_gap_time_1"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/et_gap_time" />
+            app:layout_constraintTop_toTopOf="@id/et_gap_time_1" />
 
         <EditText
-            android:id="@+id/et_gap_time"
+            android:id="@+id/et_gap_time_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:gravity="center"
+            android:hint="@string/hint_gap_time"
+            android:importantForAutofill="no"
+            android:inputType="time"
+            app:layout_constraintBottom_toTopOf="@id/et_gap_time_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_gap_time_1"
+            app:layout_constraintTop_toBottomOf="@id/et_base_time" />
+
+        <TextView
+            android:id="@+id/tv_gap_time_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gap_time_2"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/et_gap_time_2"
+            app:layout_constraintEnd_toStartOf="@id/et_gap_time_2"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_gap_time_2" />
+
+        <EditText
+            android:id="@+id/et_gap_time_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:gravity="center"
+            android:hint="@string/hint_gap_time"
+            android:importantForAutofill="no"
+            android:inputType="time"
+            app:layout_constraintBottom_toTopOf="@id/et_gap_time_3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_gap_time_2"
+            app:layout_constraintTop_toBottomOf="@id/et_gap_time_1" />
+
+        <TextView
+            android:id="@+id/tv_gap_time_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gap_time_3"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/et_gap_time_3"
+            app:layout_constraintEnd_toStartOf="@id/et_gap_time_3"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_gap_time_3" />
+
+        <EditText
+            android:id="@+id/et_gap_time_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:gravity="center"
+            android:hint="@string/hint_gap_time"
+            android:importantForAutofill="no"
+            android:inputType="time"
+            app:layout_constraintBottom_toTopOf="@id/et_gap_time_4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_gap_time_3"
+            app:layout_constraintTop_toBottomOf="@id/et_gap_time_2" />
+
+        <TextView
+            android:id="@+id/tv_gap_time_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gap_time_4"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/et_gap_time_4"
+            app:layout_constraintEnd_toStartOf="@id/et_gap_time_4"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_gap_time_4" />
+
+        <EditText
+            android:id="@+id/et_gap_time_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -56,15 +134,15 @@
             android:inputType="time"
             app:layout_constraintBottom_toTopOf="@id/et_sound_effect_loop_time"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_gap_time"
-            app:layout_constraintTop_toBottomOf="@id/et_base_time" />
+            app:layout_constraintStart_toEndOf="@id/tv_gap_time_4"
+            app:layout_constraintTop_toBottomOf="@id/et_gap_time_3" />
 
         <TextView
             android:id="@+id/tv_sound_effect_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:text="@string/sound_effect_time"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/et_sound_effect_loop_time"
             app:layout_constraintEnd_toStartOf="@id/et_sound_effect_loop_time"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -79,11 +157,11 @@
             android:gravity="center"
             android:hint="@string/hint_sound_effect_loop_time"
             android:importantForAutofill="no"
-            android:inputType="text"
+            android:inputType="numberDecimal"
             app:layout_constraintBottom_toTopOf="@id/bt_finish"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_sound_effect_time"
-            app:layout_constraintTop_toBottomOf="@id/et_gap_time" />
+            app:layout_constraintTop_toBottomOf="@id/et_gap_time_4" />
 
         <Button
             android:id="@+id/bt_finish"

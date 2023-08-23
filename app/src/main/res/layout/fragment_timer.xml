@@ -22,6 +22,7 @@
             app:layout_constraintEnd_toStartOf="@id/rv_2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:reverseLayout="true"
             tools:itemCount="5"
             tools:listitem="@layout/item_timer" />
 
@@ -45,6 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/rv_1"
             app:layout_constraintTop_toTopOf="parent"
+            app:reverseLayout="true"
             tools:itemCount="5"
             tools:listitem="@layout/item_timer" />
 
@@ -68,6 +70,7 @@
             app:layout_constraintEnd_toStartOf="@id/rv_4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_1"
+            app:reverseLayout="true"
             tools:itemCount="5"
             tools:listitem="@layout/item_timer" />
 
@@ -91,6 +94,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/rv_3"
             app:layout_constraintTop_toBottomOf="@id/rv_2"
+            app:reverseLayout="true"
             tools:itemCount="5"
             tools:listitem="@layout/item_timer" />
 

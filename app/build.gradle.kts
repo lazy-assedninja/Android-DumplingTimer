@@ -68,6 +68,9 @@ dependencies {
     implementation(libs.room)
     ksp(libs.room.compiler)
 
+    // Gson
+    implementation(libs.gson)
+
     // Log
     implementation(libs.timber)
 

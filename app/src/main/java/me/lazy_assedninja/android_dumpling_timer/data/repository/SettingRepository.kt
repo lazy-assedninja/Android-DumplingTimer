@@ -7,8 +7,8 @@ import me.lazy_assedninja.android_dumpling_timer.data.db.SettingDao
 
 class SettingRepository(private val context: Context, private val dao: SettingDao = AppDatabase.getInstance(context).settingDao()) {
 
-    fun setSetting(baseTime: Long, gapTime: Long, soundEffectLoopTime: Int) {
-        dao.insert(Setting(0, baseTime, gapTime, soundEffectLoopTime))
+    fun setSetting(baseTime: Long, gapTimeList: List<Long>, soundEffectLoopTime: Int) {
+        dao.insert(Setting(0, baseTime, gapTimeList, soundEffectLoopTime))
     }
 
     fun getSetting() = dao.get(0)

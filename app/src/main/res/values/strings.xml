@@ -12,7 +12,10 @@
 
     <!-- Setting -->
     <string name="base_time">第一層蒸籠完全蒸熟所需總時間</string>
-    <string name="gap_time">各層蒸籠蒸熟所需之時間差</string>
+    <string name="gap_time_1">第二層蒸籠蒸熟所需之時間差</string>
+    <string name="gap_time_2">第三層蒸籠蒸熟所需之時間差</string>
+    <string name="gap_time_3">第四層蒸籠蒸熟所需之時間差</string>
+    <string name="gap_time_4">第五層蒸籠蒸熟所需之時間差</string>
     <string name="sound_effect_time">提示音效</string>
     <string name="Finish">完成</string>
 

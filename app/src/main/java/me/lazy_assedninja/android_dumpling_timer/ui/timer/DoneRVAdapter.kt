@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import me.lazy_assedninja.android_dumpling_timer.data.vo.Time
+import me.lazy_assedninja.android_dumpling_timer.databinding.ItemDoneBinding
 import me.lazy_assedninja.android_dumpling_timer.databinding.ItemTimerBinding
 import me.lazy_assedninja.android_dumpling_timer.ui.base.BaseListAdapter
-import timber.log.Timber
 import kotlin.math.roundToInt
 
-class TimerRVAdapter(private val maxProgress: Int = 0) :
-    BaseListAdapter<Time, ItemTimerBinding>(diffCallback = object : DiffUtil.ItemCallback<Time>() {
+class DoneRVAdapter(private val dismissDialog: () -> Unit = {}) :
+    BaseListAdapter<Time, ItemDoneBinding>(diffCallback = object : DiffUtil.ItemCallback<Time>() {
         override fun areItemsTheSame(oldItem: Time, newItem: Time): Boolean {
             return oldItem == newItem
         }
@@ -20,11 +20,15 @@ class TimerRVAdapter(private val maxProgress: Int = 0) :
         }
     }) {
 
-    override fun createBinding(parent: ViewGroup) = ItemTimerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun createBinding(parent: ViewGroup) = ItemDoneBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-    override fun bind(binding: ItemTimerBinding, item: Time) {
-        Timber.tag("xxxxx").d("max: $maxProgress, percentage: ${item.percentage}")
-        binding.max = maxProgress
-        binding.progress = item.percentage.roundToInt()
+    override fun bind(binding: ItemDoneBinding, item: Time) {
+        binding.root.setOnClickListener {
+            submitList(currentList.toMutableList().apply {
+                remove(item)
+                if (this.size == 0) dismissDialog()
+            })
+        }
+        binding.string = item.id.toString()
     }
 }

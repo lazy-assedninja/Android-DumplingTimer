@@ -6,12 +6,8 @@
     <data>
 
         <variable
-            name="max"
-            type="java.lang.Integer" />
-
-        <variable
-            name="progress"
-            type="java.lang.Integer" />
+            name="string"
+            type="java.lang.String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,13 +15,15 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_timer_list">
 
-        <com.google.android.material.progressindicator.LinearProgressIndicator
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="@{max}"
+            android:gravity="center"
             android:paddingVertical="8dp"
-            android:progress="@{progress}"
+            android:text="@{string}"
+            android:textSize="28sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
