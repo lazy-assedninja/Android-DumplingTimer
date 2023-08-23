@@ -12,8 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.lazy_assedninja.android_dumpling_timer.R
 import me.lazy_assedninja.android_dumpling_timer.databinding.FragmentTimerBinding
@@ -32,7 +30,45 @@ class TimerFragment : BaseFragment() {
 
     private var binding by autoCleared<FragmentTimerBinding>()
 
-    private val dialog: DoneDialog by lazy {
+    private val confirmRevertDialog: ConfirmRevertDialog by lazy {
+        ConfirmRevertDialog {
+            when (viewModel.revertData()) {
+                -1 -> Toast.makeText(binding.root.context, R.string.toast_no_previous_step, Toast.LENGTH_SHORT).show()
+                0 -> {
+                    adapter1.submitList(viewModel.list1.toList())
+                    if (viewModel.list1.isEmpty()) {
+                        countDownTimer1?.cancel()
+                        countDownTimer1 = null
+                    }
+                }
+
+                1 -> {
+                    adapter2.submitList(viewModel.list2.toList())
+                    if (viewModel.list2.isEmpty()) {
+                        countDownTimer2?.cancel()
+                        countDownTimer2 = null
+                    }
+                }
+
+                2 -> {
+                    adapter3.submitList(viewModel.list3.toList())
+                    if (viewModel.list3.isEmpty()) {
+                        countDownTimer3?.cancel()
+                        countDownTimer3 = null
+                    }
+                }
+
+                3 -> {
+                    adapter4.submitList(viewModel.list4.toList())
+                    if (viewModel.list4.isEmpty()) {
+                        countDownTimer4?.cancel()
+                        countDownTimer4 = null
+                    }
+                }
+            }
+        }
+    }
+    private val doneDialog: DoneDialog by lazy {
         DoneDialog()
     }
 
@@ -64,40 +100,7 @@ class TimerFragment : BaseFragment() {
         binding.apply {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    when (viewModel.revertData()) {
-                        -1 -> Toast.makeText(root.context, R.string.toast_no_previous_step, Toast.LENGTH_SHORT).show()
-                        0 -> {
-                            adapter1.submitList(viewModel.list1.toList())
-                            if (viewModel.list1.isEmpty()) {
-                                countDownTimer1?.cancel()
-                                countDownTimer1 = null
-                            }
-                        }
-
-                        1 -> {
-                            adapter2.submitList(viewModel.list2.toList())
-                            if (viewModel.list2.isEmpty()) {
-                                countDownTimer2?.cancel()
-                                countDownTimer2 = null
-                            }
-                        }
-
-                        2 -> {
-                            adapter3.submitList(viewModel.list3.toList())
-                            if (viewModel.list3.isEmpty()) {
-                                countDownTimer3?.cancel()
-                                countDownTimer3 = null
-                            }
-                        }
-
-                        3 -> {
-                            adapter4.submitList(viewModel.list4.toList())
-                            if (viewModel.list4.isEmpty()) {
-                                countDownTimer4?.cancel()
-                                countDownTimer4 = null
-                            }
-                        }
-                    }
+                    if (!confirmRevertDialog.isVisible) confirmRevertDialog.show(parentFragmentManager, ConfirmRevertDialog::class.java.name)
                 }
             })
 
@@ -172,8 +175,8 @@ class TimerFragment : BaseFragment() {
             val item = viewModel.list1.removeFirst()
             adapter1.submitList(viewModel.list1.toList())
 
-            if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
-            dialog.addData(item)
+            if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
+            doneDialog.addData(item)
 
             countDownTimer1?.cancel()
             countDownTimer1 = null
@@ -194,8 +197,8 @@ class TimerFragment : BaseFragment() {
             val item = viewModel.list2.removeFirst()
             adapter2.submitList(viewModel.list2.toList())
 
-            if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
-            dialog.addData(item)
+            if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
+            doneDialog.addData(item)
 
             countDownTimer2?.cancel()
             countDownTimer2 = null
@@ -216,8 +219,8 @@ class TimerFragment : BaseFragment() {
             val item = viewModel.list3.removeFirst()
             adapter3.submitList(viewModel.list3.toList())
 
-            if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
-            dialog.addData(item)
+            if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
+            doneDialog.addData(item)
 
             countDownTimer3?.cancel()
             countDownTimer3 = null
@@ -238,8 +241,8 @@ class TimerFragment : BaseFragment() {
             val item = viewModel.list4.removeFirst()
             adapter4.submitList(viewModel.list4.toList())
 
-            if (!dialog.isVisible) dialog.show(parentFragmentManager, DoneDialog::class.java.name)
-            dialog.addData(item)
+            if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
+            doneDialog.addData(item)
 
             countDownTimer4?.cancel()
             countDownTimer4 = null
