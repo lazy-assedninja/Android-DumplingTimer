@@ -62,6 +62,15 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
         }.add(Time(listID + 1, (setting?.baseTime ?: 0).toDouble()))
     }
 
+    fun doneData(listID: Int) = when (listID) {
+        1 -> list2
+        2 -> list3
+        3 -> list4
+        else -> list1
+    }.apply {
+        currentTimerList.removeFirst()
+    }.removeFirst()
+
     fun revertData() = if (currentTimerList.isEmpty()) -1 else currentTimerList.removeLast().apply {
         when (this) {
             1 -> list2
@@ -78,7 +87,7 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
             3 -> list4
             else -> list1
         }.forEachIndexed { index, time ->
-            Timber.tag("xxxxx").d("onTick: ${time.percentage}")
+            Timber.tag("yyy").d("onTick: ${time.percentage}")
             time.percentage -= firepowerList[index]
         }
     }

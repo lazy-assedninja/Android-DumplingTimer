@@ -172,7 +172,7 @@ class TimerFragment : BaseFragment() {
         override fun onFinish() {
             soundEffectUtils.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
 
-            val item = viewModel.list1.removeFirst()
+            val item = viewModel.doneData(0)
             adapter1.submitList(viewModel.list1.toList())
 
             if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
@@ -194,7 +194,7 @@ class TimerFragment : BaseFragment() {
         override fun onFinish() {
             soundEffectUtils.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
 
-            val item = viewModel.list2.removeFirst()
+            val item = viewModel.doneData(1)
             adapter2.submitList(viewModel.list2.toList())
 
             if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
@@ -216,7 +216,7 @@ class TimerFragment : BaseFragment() {
         override fun onFinish() {
             soundEffectUtils.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
 
-            val item = viewModel.list3.removeFirst()
+            val item = viewModel.doneData(2)
             adapter3.submitList(viewModel.list3.toList())
 
             if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
@@ -238,7 +238,7 @@ class TimerFragment : BaseFragment() {
         override fun onFinish() {
             soundEffectUtils.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
 
-            val item = viewModel.list4.removeFirst()
+            val item = viewModel.doneData(3)
             adapter4.submitList(viewModel.list4.toList())
 
             if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
