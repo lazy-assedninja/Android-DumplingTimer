@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import me.lazy_assedninja.android_dumpling_timer.R
 import me.lazy_assedninja.android_dumpling_timer.databinding.FragmentTimerBinding
 import me.lazy_assedninja.android_dumpling_timer.ui.base.BaseFragment
-import me.lazy_assedninja.android_dumpling_timer.util.SoundEffectUtils
+import me.lazy_assedninja.android_dumpling_timer.ui.done.DoneDialog
 import me.lazy_assedninja.android_dumpling_timer.util.autoCleared
 import kotlin.math.roundToInt
 
@@ -76,10 +76,6 @@ class TimerFragment : BaseFragment() {
     private val adapter2 by lazy { TimerRVAdapter((viewModel.setting?.baseTime ?: 0).toInt()) }
     private val adapter3 by lazy { TimerRVAdapter((viewModel.setting?.baseTime ?: 0).toInt()) }
     private val adapter4 by lazy { TimerRVAdapter((viewModel.setting?.baseTime ?: 0).toInt()) }
-
-    private val soundEffectUtils by lazy {
-        SoundEffectUtils(binding.root.context)
-    }
 
     private var countDownTimer1: CountDownTimer? = null
     private var countDownTimer2: CountDownTimer? = null
@@ -170,8 +166,6 @@ class TimerFragment : BaseFragment() {
         }
 
         override fun onFinish() {
-            soundEffectUtils.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
-
             val item = viewModel.doneData(0)
             adapter1.submitList(viewModel.list1.toList())
 
@@ -192,8 +186,6 @@ class TimerFragment : BaseFragment() {
         }
 
         override fun onFinish() {
-            soundEffectUtils.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
-
             val item = viewModel.doneData(1)
             adapter2.submitList(viewModel.list2.toList())
 
@@ -214,8 +206,6 @@ class TimerFragment : BaseFragment() {
         }
 
         override fun onFinish() {
-            soundEffectUtils.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
-
             val item = viewModel.doneData(2)
             adapter3.submitList(viewModel.list3.toList())
 
@@ -236,8 +226,6 @@ class TimerFragment : BaseFragment() {
         }
 
         override fun onFinish() {
-            soundEffectUtils.playWarningSound(viewModel.setting?.soundEffectLoopTime ?: 0)
-
             val item = viewModel.doneData(3)
             adapter4.submitList(viewModel.list4.toList())
 
@@ -248,10 +236,5 @@ class TimerFragment : BaseFragment() {
             countDownTimer4 = null
             if (viewModel.list4.isNotEmpty()) countDownTimer4 = createCountDownTimer4().start()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        soundEffectUtils.release()
     }
 }

@@ -6,25 +6,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import me.lazy_assedninja.android_dumpling_timer.data.db.Setting
 import me.lazy_assedninja.android_dumpling_timer.data.repository.SettingRepository
 
 class SettingViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: SettingRepository
+    private val repository = SettingRepository(application)
 
-    init {
-        repository = SettingRepository(application)
-        viewModelScope.launch {
-            repository.getSetting().collect {
-                _setting.emit(it)
-            }
-        }
-    }
-
-    private val _setting: MutableSharedFlow<Setting?> = MutableSharedFlow()
-    val setting: SharedFlow<Setting?> = _setting
+    val setting: SharedFlow<Setting?> = repository.getSetting().shareIn(viewModelScope, SharingStarted.Eagerly)
 
     fun setSetting(baseTime: Long, gapTimeList: List<Long>, soundEffectLoopTime: Int) {
         viewModelScope.launch(Dispatchers.IO) {

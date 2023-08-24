@@ -1,13 +1,11 @@
-package me.lazy_assedninja.android_dumpling_timer.ui.timer
+package me.lazy_assedninja.android_dumpling_timer.ui.done
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import me.lazy_assedninja.android_dumpling_timer.data.vo.Time
 import me.lazy_assedninja.android_dumpling_timer.databinding.ItemDoneBinding
-import me.lazy_assedninja.android_dumpling_timer.databinding.ItemTimerBinding
 import me.lazy_assedninja.android_dumpling_timer.ui.base.BaseListAdapter
-import kotlin.math.roundToInt
 
 class DoneRVAdapter(private val dismissDialog: () -> Unit = {}) :
     BaseListAdapter<Time, ItemDoneBinding>(diffCallback = object : DiffUtil.ItemCallback<Time>() {
