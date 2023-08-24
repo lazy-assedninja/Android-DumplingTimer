@@ -157,7 +157,7 @@
             android:gravity="center"
             android:hint="@string/hint_sound_effect_loop_time"
             android:importantForAutofill="no"
-            android:inputType="numberDecimal"
+            android:inputType="numberSigned"
             app:layout_constraintBottom_toTopOf="@id/bt_finish"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_sound_effect_time"

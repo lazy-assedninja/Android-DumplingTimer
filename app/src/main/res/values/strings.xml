@@ -23,6 +23,7 @@
     <string name="hint_gap_time">間隔時間/秒</string>
     <string name="hint_sound_effect_loop_time">提示聲重複次數(設定-1為無限重播)</string>
 
+    <string name="toast_wrong_number_format">時間格式錯誤</string>
     <!-- Done -->
     <string name="done">完成</string>
 

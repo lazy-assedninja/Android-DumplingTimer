@@ -14,6 +14,7 @@ import me.lazy_assedninja.android_dumpling_timer.R
 import me.lazy_assedninja.android_dumpling_timer.databinding.FragmentSettingBinding
 import me.lazy_assedninja.android_dumpling_timer.ui.base.BaseFragment
 import me.lazy_assedninja.android_dumpling_timer.util.autoCleared
+import java.lang.Exception
 
 class SettingFragment : BaseFragment() {
 
@@ -22,9 +23,7 @@ class SettingFragment : BaseFragment() {
     private val viewModel: SettingViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentSettingBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
@@ -36,21 +35,23 @@ class SettingFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             btFinish.setOnClickListener {
-                if (etGapTime1.text.isEmpty() || etGapTime2.text.isEmpty() || etGapTime3.text.isEmpty() || etGapTime4.text.isEmpty()) {
-                    Toast.makeText(it.context, R.string.toast_set_time_first, Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
+                try {
+                    if (etBaseTime.text.isEmpty() || etGapTime1.text.isEmpty() || etGapTime2.text.isEmpty() || etGapTime3.text.isEmpty() || etGapTime4.text.isEmpty() || etSoundEffectLoopTime.text.isEmpty()) {
+                        Toast.makeText(it.context, R.string.toast_set_time_first, Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                    viewModel.setSetting(
+                        etBaseTime.text.toString().toLong(), listOf(
+                            etGapTime1.text.toString().toLong(),
+                            etGapTime2.text.toString().toLong(),
+                            etGapTime3.text.toString().toLong(),
+                            etGapTime4.text.toString().toLong()
+                        ), etSoundEffectLoopTime.text.toString().toInt()
+                    )
+                    requireActivity().onBackPressed()
+                } catch (e: NumberFormatException) {
+                    Toast.makeText(it.context, R.string.toast_wrong_number_format, Toast.LENGTH_SHORT).show()
                 }
-                viewModel.setSetting(
-                    etBaseTime.text.toString().toLong(),
-                    listOf(
-                        etGapTime1.text.toString().toLong(),
-                        etGapTime2.text.toString().toLong(),
-                        etGapTime3.text.toString().toLong(),
-                        etGapTime4.text.toString().toLong()
-                    ),
-                    etSoundEffectLoopTime.text.toString().toInt()
-                )
-                requireActivity().onBackPressed()
             }
 
             lifecycleScope.launch {
