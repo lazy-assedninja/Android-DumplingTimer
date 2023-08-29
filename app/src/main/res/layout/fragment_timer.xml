@@ -9,14 +9,29 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="UnusedAttribute">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.4"
+            android:autoSizeMaxTextSize="500sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="@string/_1"
+            android:textColor="?attr/colorTertiary"
+            app:layout_constraintBottom_toBottomOf="@id/rv_1"
+            app:layout_constraintEnd_toEndOf="@id/rv_1"
+            app:layout_constraintStart_toStartOf="@id/rv_1"
+            app:layout_constraintTop_toTopOf="@id/rv_1"
+            app:reverseLayout="true" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_1"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="32dp"
-            android:background="@drawable/bg_timer_list"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/rv_3"
             app:layout_constraintEnd_toStartOf="@id/rv_2"
@@ -35,12 +50,26 @@
             app:layout_constraintStart_toStartOf="@id/rv_1"
             app:layout_constraintTop_toTopOf="@id/rv_1" />
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.4"
+            android:autoSizeMaxTextSize="500sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="@string/_2"
+            android:textColor="?attr/colorTertiary"
+            app:layout_constraintBottom_toBottomOf="@id/rv_2"
+            app:layout_constraintEnd_toEndOf="@id/rv_2"
+            app:layout_constraintStart_toStartOf="@id/rv_2"
+            app:layout_constraintTop_toTopOf="@id/rv_2"
+            app:reverseLayout="true" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_2"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="32dp"
-            android:background="@drawable/bg_timer_list"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/rv_4"
             app:layout_constraintEnd_toEndOf="parent"
@@ -59,12 +88,26 @@
             app:layout_constraintStart_toStartOf="@id/rv_2"
             app:layout_constraintTop_toTopOf="@id/rv_2" />
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.4"
+            android:autoSizeMaxTextSize="500sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="@string/_3"
+            android:textColor="?attr/colorTertiary"
+            app:layout_constraintBottom_toBottomOf="@id/rv_3"
+            app:layout_constraintEnd_toEndOf="@id/rv_3"
+            app:layout_constraintStart_toStartOf="@id/rv_3"
+            app:layout_constraintTop_toTopOf="@id/rv_3"
+            app:reverseLayout="true" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_3"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="32dp"
-            android:background="@drawable/bg_timer_list"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/rv_4"
@@ -83,12 +126,26 @@
             app:layout_constraintStart_toStartOf="@id/rv_3"
             app:layout_constraintTop_toTopOf="@id/rv_3" />
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.4"
+            android:autoSizeMaxTextSize="500sp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="@string/_4"
+            android:textColor="?attr/colorTertiary"
+            app:layout_constraintBottom_toBottomOf="@id/rv_4"
+            app:layout_constraintEnd_toEndOf="@id/rv_4"
+            app:layout_constraintStart_toStartOf="@id/rv_4"
+            app:layout_constraintTop_toTopOf="@id/rv_4"
+            app:reverseLayout="true" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_4"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="32dp"
-            android:background="@drawable/bg_timer_list"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
