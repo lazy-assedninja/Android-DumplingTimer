@@ -16,19 +16,20 @@
     <string name="toast_no_previous_step">無上一步</string>
 
     <!-- Setting -->
-    <string name="base_time">第一層蒸籠完全蒸熟所需總時間</string>
-    <string name="gap_time_1">第二層蒸籠蒸熟所需之時間差</string>
-    <string name="gap_time_2">第三層蒸籠蒸熟所需之時間差</string>
-    <string name="gap_time_3">第四層蒸籠蒸熟所需之時間差</string>
-    <string name="gap_time_4">第五層蒸籠蒸熟所需之時間差</string>
+    <string name="base_time">第一層蒸籠完全蒸熟所需總時間(時間/秒)</string>
+    <string name="gap_time_1">第二層蒸籠蒸熟所需之時間差(時間/秒)</string>
+    <string name="gap_time_2">第三層蒸籠蒸熟所需之時間差(時間/秒)</string>
+    <string name="gap_time_3">第四層蒸籠蒸熟所需之時間差(時間/秒)</string>
+    <string name="gap_time_4">第五層蒸籠蒸熟所需之時間差(時間/秒)</string>
     <string name="sound_effect_time">提示音效</string>
     <string name="Finish">完成</string>
 
-    <string name="hint_base_time">基礎時間/秒</string>
+    <string name="hint_base_time">時間/秒</string>
     <string name="hint_gap_time">間隔時間/秒</string>
     <string name="hint_sound_effect_loop_time">提示聲重複次數(設定-1為無限重播)</string>
 
-    <string name="toast_wrong_number_format">時間格式錯誤</string>
+    <string name="error_wrong_number_format">數字格式錯誤</string>
+    <string name="error_wrong_time_format">時間格式錯誤</string>
     <!-- Done -->
     <string name="done">完成</string>
 
