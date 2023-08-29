@@ -34,6 +34,6 @@
     <string name="done">完成</string>
 
     <!-- Confirm Revert -->
-    <string name="confirm_revert">確認返回？</string>
+    <string name="confirm_revert">確認返回 ?</string>
     <string name="confirm">確認</string>
 </resources>
