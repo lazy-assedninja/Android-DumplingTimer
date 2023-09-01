@@ -6,7 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -21,13 +21,11 @@ import me.lazy_assedninja.android_dumpling_timer.util.autoCleared
 
 class SettingFragment : BaseFragment() {
 
-    private var binding by autoCleared<FragmentSettingBinding>()
-
     private val viewModel: SettingViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+    private var binding by autoCleared<FragmentSettingBinding>()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentSettingBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
         }
@@ -37,85 +35,31 @@ class SettingFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            fun Editable?.checkNumberFormat(textInputLayout: TextInputLayout) {
-                try {
-                    this.toString().toLong()
-                    textInputLayout.error = null
-                } catch (e: NumberFormatException) {
-                    textInputLayout.error = getString(R.string.error_wrong_time_format)
-                }
-            }
-            tieBaseTime.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                }
+            fun textWatcher(textInputLayout: TextInputLayout, @StringRes stringRes: Int = R.string.error_wrong_time_format, isInt: Boolean = false) =
+                object : TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                }
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    }
 
-                override fun afterTextChanged(s: Editable?) {
-                    s.checkNumberFormat(tilBaseTime)
-                }
-            })
-            tieGapTime1.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    s.checkNumberFormat(tilGapTime1)
-                }
-            })
-            tieGapTime2.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    s.checkNumberFormat(tilGapTime2)
-                }
-            })
-            tieGapTime3.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    s.checkNumberFormat(tilGapTime3)
-                }
-            })
-            tieGapTime4.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    s.checkNumberFormat(tilGapTime4)
-                }
-            })
-            tieSoundEffectLoopTime.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    try {
-                        s.toString().toInt()
-                        tilSoundEffectLoopTime.error = null
-                    } catch (e: NumberFormatException) {
-                        tilSoundEffectLoopTime.error = getString(R.string.error_wrong_number_format)
+                    override fun afterTextChanged(s: Editable?) {
+                        try {
+                            s.toString().apply {
+                                if (isInt) toInt() else toLong()
+                            }
+                            textInputLayout.error = null
+                        } catch (e: NumberFormatException) {
+                            textInputLayout.error = getString(stringRes)
+                        }
                     }
                 }
-            })
+            tieBaseTime.addTextChangedListener(textWatcher(tilBaseTime))
+            tieGapTime1.addTextChangedListener(textWatcher(tilGapTime1))
+            tieGapTime2.addTextChangedListener(textWatcher(tilGapTime2))
+            tieGapTime3.addTextChangedListener(textWatcher(tilGapTime3))
+            tieGapTime4.addTextChangedListener(textWatcher(tilGapTime4))
+            tieSoundEffectLoopTime.addTextChangedListener(textWatcher(tilSoundEffectLoopTime, R.string.error_wrong_number_format, true))
 
             btFinish.setOnClickListener {
                 dismissKeyboard(it.windowToken)
@@ -140,14 +84,19 @@ class SettingFragment : BaseFragment() {
 
             lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.setting.collect {
-                        if (it == null) return@collect
-                        tieBaseTime.setText(it.baseTime.toString())
-                        tieGapTime1.setText(it.gapTimeList[0].toString())
-                        tieGapTime2.setText(it.gapTimeList[1].toString())
-                        tieGapTime3.setText(it.gapTimeList[2].toString())
-                        tieGapTime4.setText(it.gapTimeList[3].toString())
-                        tieSoundEffectLoopTime.setText(it.soundEffectLoopTime.toString())
+                    viewModel.uiState.collect { uiState ->
+                        when (uiState) {
+                            is UiState.SettingData -> {
+                                tieBaseTime.setText(uiState.setting.baseTime.toString())
+                                tieGapTime1.setText(uiState.setting.gapTimeList[0].toString())
+                                tieGapTime2.setText(uiState.setting.gapTimeList[1].toString())
+                                tieGapTime3.setText(uiState.setting.gapTimeList[2].toString())
+                                tieGapTime4.setText(uiState.setting.gapTimeList[3].toString())
+                                tieSoundEffectLoopTime.setText(uiState.setting.soundEffectLoopTime.toString())
+                            }
+
+                            else -> {}
+                        }
                     }
                 }
             }

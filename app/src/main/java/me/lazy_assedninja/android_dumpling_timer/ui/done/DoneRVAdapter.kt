@@ -7,7 +7,7 @@ import me.lazy_assedninja.android_dumpling_timer.data.vo.Time
 import me.lazy_assedninja.android_dumpling_timer.databinding.ItemDoneBinding
 import me.lazy_assedninja.android_dumpling_timer.ui.base.BaseListAdapter
 
-class DoneRVAdapter(private val dismissDialog: () -> Unit = {}) :
+class DoneRVAdapter(private val removeData: (item: Time) -> Unit) :
     BaseListAdapter<Time, ItemDoneBinding>(diffCallback = object : DiffUtil.ItemCallback<Time>() {
         override fun areItemsTheSame(oldItem: Time, newItem: Time): Boolean {
             return oldItem == newItem
@@ -22,10 +22,7 @@ class DoneRVAdapter(private val dismissDialog: () -> Unit = {}) :
 
     override fun bind(binding: ItemDoneBinding, item: Time) {
         binding.root.setOnClickListener {
-            submitList(currentList.toMutableList().apply {
-                remove(item)
-                if (this.size == 0) dismissDialog()
-            })
+            removeData(item)
         }
         binding.string = item.id.toString()
     }

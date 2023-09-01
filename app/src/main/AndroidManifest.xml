@@ -16,7 +16,6 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
 
             <intent-filter>

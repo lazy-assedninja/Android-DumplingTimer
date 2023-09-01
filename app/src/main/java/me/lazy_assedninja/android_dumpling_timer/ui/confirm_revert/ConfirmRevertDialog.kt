@@ -1,4 +1,4 @@
-package me.lazy_assedninja.android_dumpling_timer.ui.timer
+package me.lazy_assedninja.android_dumpling_timer.ui.confirm_revert
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,10 +9,13 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import me.lazy_assedninja.android_dumpling_timer.databinding.DialogConfirmRevertBinding
 import me.lazy_assedninja.android_dumpling_timer.util.autoCleared
 
-class ConfirmRevertDialog(val revertData: () -> Unit) : DialogFragment() {
+class ConfirmRevertDialog : DialogFragment() {
+
+    private val viewModel: ConfirmRevertViewModel by activityViewModels()
 
     private var binding by autoCleared<DialogConfirmRevertBinding>()
 
@@ -37,7 +40,7 @@ class ConfirmRevertDialog(val revertData: () -> Unit) : DialogFragment() {
         })
 
         binding.btConfirm.setOnClickListener {
-            revertData()
+            viewModel.confirmClick()
             dismiss()
         }
     }

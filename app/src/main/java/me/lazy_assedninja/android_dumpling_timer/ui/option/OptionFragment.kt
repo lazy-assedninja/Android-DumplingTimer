@@ -5,19 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import me.lazy_assedninja.android_dumpling_timer.R
 import me.lazy_assedninja.android_dumpling_timer.databinding.FragmentOptionBinding
 import me.lazy_assedninja.android_dumpling_timer.ui.base.BaseFragment
-import me.lazy_assedninja.android_dumpling_timer.ui.timer.TimerViewModel
+import me.lazy_assedninja.android_dumpling_timer.ui.setting.SettingViewModel
 import me.lazy_assedninja.android_dumpling_timer.util.autoCleared
 
 class OptionFragment : BaseFragment() {
 
-    private var binding by autoCleared<FragmentOptionBinding>()
+    private val settingViewModel: SettingViewModel by viewModels()
 
-    private val timerViewModel: TimerViewModel by viewModels()
+    private var binding by autoCleared<FragmentOptionBinding>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentOptionBinding.inflate(inflater, container, false).apply {
@@ -28,14 +32,21 @@ class OptionFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        timerViewModel // For init.
+        binding.apply {
+            btSetting.setOnClickListener {
+                findNavController().navigate(OptionFragmentDirections.toSettingFragment())
+            }
 
-        binding.btTimer.setOnClickListener {
-            if (timerViewModel.setting == null) Snackbar.make(binding.root, R.string.toast_set_time_first, Snackbar.LENGTH_SHORT).show()
-            else findNavController().navigate(OptionFragmentDirections.toTimerFragment())
-        }
-        binding.btSetting.setOnClickListener {
-            findNavController().navigate(OptionFragmentDirections.toSettingFragment())
+            lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    settingViewModel.setting.collect { setting ->
+                        btTimer.setOnClickListener {
+                            if (setting == null) Snackbar.make(root, R.string.toast_set_time_first, Snackbar.LENGTH_SHORT).show()
+                            else findNavController().navigate(OptionFragmentDirections.toTimerFragment())
+                        }
+                    }
+                }
+            }
         }
     }
 }

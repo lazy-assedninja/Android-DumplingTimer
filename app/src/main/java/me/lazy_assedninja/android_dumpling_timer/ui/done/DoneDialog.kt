@@ -9,27 +9,24 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
-import me.lazy_assedninja.android_dumpling_timer.data.vo.Time
 import me.lazy_assedninja.android_dumpling_timer.databinding.DialogDoneBinding
 import me.lazy_assedninja.android_dumpling_timer.util.SoundEffectUtils
 import me.lazy_assedninja.android_dumpling_timer.util.autoCleared
 
 class DoneDialog : DialogFragment() {
 
-    private val viewModel: DoneViewModel by viewModels()
+    private val viewModel: DoneViewModel by activityViewModels()
 
     private var binding by autoCleared<DialogDoneBinding>()
 
-    private val adapter = DoneRVAdapter { dismiss() }
+    private val adapter = DoneRVAdapter { item -> viewModel.removeData(item) }
 
-    private val soundEffectUtils by lazy {
-        SoundEffectUtils(binding.root.context)
-    }
+    private lateinit var soundEffectUtils: SoundEffectUtils
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -45,29 +42,35 @@ class DoneDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         isCancelable = false
 
+        soundEffectUtils = SoundEffectUtils(binding.root.context)
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // Do nothing
             }
         })
 
-        binding.apply {
-            rv.adapter = adapter
-        }
+        binding.rv.adapter = adapter
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.setting.collect {
                     soundEffectUtils.playWarningSound(it?.soundEffectLoopTime ?: 0)
                 }
             }
         }
-    }
-
-    fun addData(item: Time) {
-        adapter.submitList(adapter.currentList.toMutableList().apply {
-            add(item)
-        })
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    when (uiState) {
+                        is UiState.DoneList -> {
+                            adapter.submitList(uiState.list.toList())
+                            if (uiState.list.isEmpty()) dismiss()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroy() {

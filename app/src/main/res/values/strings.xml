@@ -6,11 +6,8 @@
     <string name="setting">設定</string>
     <string name="hint">提示</string>
     <string name="warning">注意事項</string>
-    <string name="need_to_set_time_first">需先至設定頁面\n設定時間</string>
-    <string name="see_inside_page_for_other_detail">其餘詳情請見內頁</string>
-    <string name="there_may_be_an_error_about_2_seconds">每次計時最多會有2秒左右的誤差</string>
     <string name="toast_set_time_first">時間尚未設定</string>
-    
+
     <!-- Timer -->
     <string name="toast_up_to_limit">已達上限</string>
     <string name="toast_no_previous_step">無上一步</string>

@@ -2,33 +2,56 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/option">
+    app:startDestination="@id/option_fragment">
 
     <fragment
-        android:id="@+id/option"
+        android:id="@+id/option_fragment"
         android:name="me.lazy_assedninja.android_dumpling_timer.ui.option.OptionFragment"
         tools:layout="@layout/fragment_option">
 
         <action
             android:id="@+id/to_timer_fragment"
-            app:destination="@id/timer"
+            app:destination="@id/timer_fragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
 
         <action
             android:id="@+id/to_setting_fragment"
-            app:destination="@id/setting"
+            app:destination="@id/setting_fragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
 
     <fragment
-        android:id="@+id/timer"
+        android:id="@+id/timer_fragment"
         android:name="me.lazy_assedninja.android_dumpling_timer.ui.timer.TimerFragment"
-        tools:layout="@layout/fragment_timer" />
+        tools:layout="@layout/fragment_timer">
+
+        <action
+            android:id="@+id/show_done_dialog"
+            app:destination="@id/done_fragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+
+        <action
+            android:id="@+id/show_confirm_revert_dialog"
+            app:destination="@id/confirm_revert_fragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
 
     <fragment
-        android:id="@+id/setting"
+        android:id="@+id/setting_fragment"
         android:name="me.lazy_assedninja.android_dumpling_timer.ui.setting.SettingFragment"
         tools:layout="@layout/fragment_setting" />
+
+    <dialog
+        android:id="@+id/done_fragment"
+        android:name="me.lazy_assedninja.android_dumpling_timer.ui.done.DoneDialog"
+        tools:layout="@layout/dialog_done" />
+
+    <dialog
+        android:id="@+id/confirm_revert_fragment"
+        android:name="me.lazy_assedninja.android_dumpling_timer.ui.confirm_revert.ConfirmRevertDialog"
+        tools:layout="@layout/dialog_confirm_revert" />
 </navigation>
