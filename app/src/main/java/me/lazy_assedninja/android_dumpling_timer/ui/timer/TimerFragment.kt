@@ -6,17 +6,20 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import me.lazy_assedninja.android_dumpling_timer.R
 import me.lazy_assedninja.android_dumpling_timer.databinding.FragmentTimerBinding
 import me.lazy_assedninja.android_dumpling_timer.ui.base.BaseFragment
-import me.lazy_assedninja.android_dumpling_timer.ui.done.DoneDialog
+import me.lazy_assedninja.android_dumpling_timer.ui.confirm_revert.ConfirmRevertViewModel
+import me.lazy_assedninja.android_dumpling_timer.ui.done.DoneViewModel
 import me.lazy_assedninja.android_dumpling_timer.util.autoCleared
 import kotlin.math.roundToInt
 
@@ -27,50 +30,10 @@ class TimerFragment : BaseFragment() {
     }
 
     private val viewModel: TimerViewModel by viewModels()
+    private val doneViewModel: DoneViewModel by activityViewModels()
+    private val confirmRevertViewModel: ConfirmRevertViewModel by activityViewModels()
 
     private var binding by autoCleared<FragmentTimerBinding>()
-
-    private val confirmRevertDialog: ConfirmRevertDialog by lazy {
-        ConfirmRevertDialog {
-            when (viewModel.revertData()) {
-                -1 -> Toast.makeText(binding.root.context, R.string.toast_no_previous_step, Toast.LENGTH_SHORT).show()
-                0 -> {
-                    adapter1.submitList(viewModel.list1.toList())
-                    if (viewModel.list1.isEmpty()) {
-                        countDownTimer1?.cancel()
-                        countDownTimer1 = null
-                    }
-                }
-
-                1 -> {
-                    adapter2.submitList(viewModel.list2.toList())
-                    if (viewModel.list2.isEmpty()) {
-                        countDownTimer2?.cancel()
-                        countDownTimer2 = null
-                    }
-                }
-
-                2 -> {
-                    adapter3.submitList(viewModel.list3.toList())
-                    if (viewModel.list3.isEmpty()) {
-                        countDownTimer3?.cancel()
-                        countDownTimer3 = null
-                    }
-                }
-
-                3 -> {
-                    adapter4.submitList(viewModel.list4.toList())
-                    if (viewModel.list4.isEmpty()) {
-                        countDownTimer4?.cancel()
-                        countDownTimer4 = null
-                    }
-                }
-            }
-        }
-    }
-    private val doneDialog: DoneDialog by lazy {
-        DoneDialog()
-    }
 
     private val adapter1 by lazy { TimerRVAdapter((viewModel.setting?.baseTime ?: 0).toInt()) }
     private val adapter2 by lazy { TimerRVAdapter((viewModel.setting?.baseTime ?: 0).toInt()) }
@@ -91,67 +54,75 @@ class TimerFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel // For init.
-
         binding.apply {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (!confirmRevertDialog.isVisible) confirmRevertDialog.show(parentFragmentManager, ConfirmRevertDialog::class.java.name)
+                    if (viewModel.currentTimerList.isEmpty()) Snackbar.make(binding.root, R.string.toast_no_previous_step, Snackbar.LENGTH_SHORT)
+                        .show()
+                    else if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showConfirmRevertDialog())
                 }
             })
 
-            v1.setOnClickListener {
-                if (viewModel.list1.size >= 5) {
-                    Toast.makeText(it.context, R.string.toast_up_to_limit, Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
+            fun showReachLimitSnackbar() {
+                Snackbar.make(binding.root, R.string.toast_up_to_limit, Snackbar.LENGTH_SHORT).show()
+            }
 
-                viewModel.addData(0)
-                adapter1.submitList(viewModel.list1.toList())
+            v1.setOnClickListener {
+                if (!viewModel.addData(0)) showReachLimitSnackbar()
 
                 if (viewModel.list1.size == 1) countDownTimer1 = createCountDownTimer1().start()
             }
             v2.setOnClickListener {
-                if (viewModel.list2.size >= 5) {
-                    Toast.makeText(it.context, R.string.toast_up_to_limit, Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-
-                viewModel.addData(1)
-                adapter2.submitList(viewModel.list2.toList())
+                if (!viewModel.addData(0)) showReachLimitSnackbar()
 
                 if (viewModel.list2.size == 1) countDownTimer2 = createCountDownTimer2().start()
             }
             v3.setOnClickListener {
-                if (viewModel.list3.size >= 5) {
-                    Toast.makeText(it.context, R.string.toast_up_to_limit, Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-
-                viewModel.addData(2)
-                adapter3.submitList(viewModel.list3.toList())
+                if (!viewModel.addData(0)) showReachLimitSnackbar()
 
                 if (viewModel.list3.size == 1) countDownTimer3 = createCountDownTimer3().start()
             }
             v4.setOnClickListener {
-                if (viewModel.list4.size >= 5) {
-                    Toast.makeText(it.context, R.string.toast_up_to_limit, Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-
-                viewModel.addData(3)
-                adapter4.submitList(viewModel.list4.toList())
+                if (!viewModel.addData(0)) showReachLimitSnackbar()
 
                 if (viewModel.list4.size == 1) countDownTimer4 = createCountDownTimer4().start()
             }
 
             lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.initSettingFinished.collect {
                         rv1.adapter = adapter1
                         rv2.adapter = adapter2
                         rv3.adapter = adapter3
                         rv4.adapter = adapter4
+                    }
+                }
+            }
+
+            lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    confirmRevertViewModel.confirmClick.collect {
+                        when (viewModel.revertData()) {
+                            0 -> if (viewModel.list1.isEmpty()) {
+                                countDownTimer1?.cancel()
+                                countDownTimer1 = null
+                            }
+
+                            1 -> if (viewModel.list2.isEmpty()) {
+                                countDownTimer2?.cancel()
+                                countDownTimer2 = null
+                            }
+
+                            2 -> if (viewModel.list3.isEmpty()) {
+                                countDownTimer3?.cancel()
+                                countDownTimer3 = null
+                            }
+
+                            3 -> if (viewModel.list4.isEmpty()) {
+                                countDownTimer4?.cancel()
+                                countDownTimer4 = null
+                            }
+                        }
                     }
                 }
             }
@@ -167,10 +138,9 @@ class TimerFragment : BaseFragment() {
 
         override fun onFinish() {
             val item = viewModel.doneData(0)
-            adapter1.submitList(viewModel.list1.toList())
 
-            if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
-            doneDialog.addData(item)
+            if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showDoneDialog())
+            doneViewModel.addData(item)
 
             countDownTimer1?.cancel()
             countDownTimer1 = null
@@ -187,10 +157,9 @@ class TimerFragment : BaseFragment() {
 
         override fun onFinish() {
             val item = viewModel.doneData(1)
-            adapter2.submitList(viewModel.list2.toList())
 
-            if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
-            doneDialog.addData(item)
+            if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showDoneDialog())
+            doneViewModel.addData(item)
 
             countDownTimer2?.cancel()
             countDownTimer2 = null
@@ -207,10 +176,9 @@ class TimerFragment : BaseFragment() {
 
         override fun onFinish() {
             val item = viewModel.doneData(2)
-            adapter3.submitList(viewModel.list3.toList())
 
-            if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
-            doneDialog.addData(item)
+            if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showDoneDialog())
+            doneViewModel.addData(item)
 
             countDownTimer3?.cancel()
             countDownTimer3 = null
@@ -227,10 +195,9 @@ class TimerFragment : BaseFragment() {
 
         override fun onFinish() {
             val item = viewModel.doneData(3)
-            adapter4.submitList(viewModel.list4.toList())
 
-            if (!doneDialog.isVisible) doneDialog.show(parentFragmentManager, DoneDialog::class.java.name)
-            doneDialog.addData(item)
+            if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showDoneDialog())
+            doneViewModel.addData(item)
 
             countDownTimer4?.cancel()
             countDownTimer4 = null
