@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import me.lazy_assedninja.android_dumpling_timer.data.db.Setting
 import me.lazy_assedninja.android_dumpling_timer.data.repository.SettingRepository
 import me.lazy_assedninja.android_dumpling_timer.data.vo.Time
+import timber.log.Timber
 
 class TimerViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -24,17 +25,21 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
     private val _initSettingFinished = MutableSharedFlow<Unit>()
     val initSettingFinished: SharedFlow<Unit> = _initSettingFinished
 
-    private val _list1UiState = MutableStateFlow<ListUiState>(ListUiState.TimeList(emptyList()))
+    private val _list1UiState = MutableStateFlow<ListUiState>(ListUiState.Init)
     val list1UiState: StateFlow<ListUiState> = _list1UiState
+    val cacheList1 = mutableListOf<Time>()
 
-    private val _list2UiState = MutableStateFlow<ListUiState>(ListUiState.TimeList(emptyList()))
+    private val _list2UiState = MutableStateFlow<ListUiState>(ListUiState.Init)
     val list2UiState: StateFlow<ListUiState> = _list2UiState
+    val cacheList2 = mutableListOf<Time>()
 
-    private val _list3UiState = MutableStateFlow<ListUiState>(ListUiState.TimeList(emptyList()))
+    private val _list3UiState = MutableStateFlow<ListUiState>(ListUiState.Init)
     val list3UiState: StateFlow<ListUiState> = _list3UiState
+    val cacheList3 = mutableListOf<Time>()
 
-    private val _list4UiState = MutableStateFlow<ListUiState>(ListUiState.TimeList(emptyList()))
+    private val _list4UiState = MutableStateFlow<ListUiState>(ListUiState.Init)
     val list4UiState: StateFlow<ListUiState> = _list4UiState
+    val cacheList4 = mutableListOf<Time>()
 
     init {
         viewModelScope.launch {
@@ -50,48 +55,58 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
                     firepowerList.add(((setting?.baseTime ?: 0) - gap) / (setting?.baseTime ?: 0))
                 }
 
+                Timber.tag("xxxxx").d("setting: $setting")
                 _initSettingFinished.emit(Unit)
             }
         }
     }
 
-    fun addData(listID: Int) {
-        currentTimerList.add(listID)
+    fun addData(listID: Int) = (currentTimerList.filter { it == listID }.size < 5).apply {
+        if (this) {
+            currentTimerList.add(listID)
 
+            when (listID) {
+                1 -> _list2UiState
+                2 -> _list3UiState
+                3 -> _list4UiState
+                else -> _list1UiState
+            }.apply {
+                value = ListUiState.TimeList(
+                    (if (value is ListUiState.Init) emptyList() else (value as ListUiState.TimeList).list).toMutableList().apply {
+                        add(Time(listID + 1, (setting?.baseTime ?: 0).toDouble()))
+                    })
+            }
+        }
+    }
+
+    fun doneData(listID: Int): Time {
+        val time: Time
         when (listID) {
             1 -> _list2UiState
             2 -> _list3UiState
             3 -> _list4UiState
             else -> _list1UiState
         }.apply {
-            value = ListUiState.TimeList((value as ListUiState.TimeList).list.toMutableList().apply {
-                add(Time(listID + 1, (setting?.baseTime ?: 0).toDouble()))
-            })
+            value = ListUiState.TimeList(
+                (if (value is ListUiState.Init) emptyList() else (value as ListUiState.TimeList).list).toMutableList().apply {
+                    currentTimerList.remove(listID)
+                    time = removeFirst()
+                })
         }
+        return time
     }
 
-    fun doneData(listID: Int) = when (listID) {
-        1 -> _list2UiState
-        2 -> _list3UiState
-        3 -> _list4UiState
-        else -> _list1UiState
-    }.apply {
-        value = ListUiState.TimeList((value as ListUiState.TimeList).list.toMutableList().apply {
-            removeFirst()
-            currentTimerList.remove(listID)
-        })
-    }
-
-    fun revertData() = currentTimerList.removeLast().apply {
-        when (this) {
+    fun revertData() {
+        when (currentTimerList.removeLast()) {
             1 -> _list2UiState
             2 -> _list3UiState
             3 -> _list4UiState
             else -> _list1UiState
         }.apply {
-            value = ListUiState.TimeList((value as ListUiState.TimeList).list.toMutableList().apply {
-                removeLast()
-            })
+            value = ListUiState.TimeList(
+                (if (value is ListUiState.Init) emptyList() else (value as ListUiState.TimeList).list).toMutableList().apply {
+                    removeLast()
+                })
         }
     }
 
@@ -102,15 +117,19 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
             3 -> _list4UiState
             else -> _list1UiState
         }.apply {
-            value = ListUiState.TimeList((value as ListUiState.TimeList).list.toMutableList().apply {
-                forEachIndexed { index, time ->
-                    time.percentage -= firepowerList[index]
+            val list = (if (value is ListUiState.Init) emptyList() else (value as ListUiState.TimeList).list).toMutableList().apply {
+                for (index in 0..lastIndex) {
+                    val time = this[index]
+                    this[index] = time.copy(id = time.id, percentage = time.percentage - firepowerList[index])
                 }
-            })
+            }
+            Timber.tag("xxxxx").d("onTick: $list")
+            value = ListUiState.TimeList(list)
         }
     }
 }
 
 sealed class ListUiState {
+    data object Init : ListUiState()
     data class TimeList(val list: List<Time>) : ListUiState()
 }

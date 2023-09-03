@@ -3,6 +3,7 @@ package me.lazy_assedninja.android_dumpling_timer.ui.timer
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +17,13 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import me.lazy_assedninja.android_dumpling_timer.R
+import me.lazy_assedninja.android_dumpling_timer.data.vo.Time
 import me.lazy_assedninja.android_dumpling_timer.databinding.FragmentTimerBinding
 import me.lazy_assedninja.android_dumpling_timer.ui.base.BaseFragment
 import me.lazy_assedninja.android_dumpling_timer.ui.confirm_revert.ConfirmRevertViewModel
 import me.lazy_assedninja.android_dumpling_timer.ui.done.DoneViewModel
 import me.lazy_assedninja.android_dumpling_timer.util.autoCleared
+import timber.log.Timber
 import kotlin.math.roundToInt
 
 class TimerFragment : BaseFragment() {
@@ -52,6 +55,7 @@ class TimerFragment : BaseFragment() {
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
@@ -69,23 +73,15 @@ class TimerFragment : BaseFragment() {
 
             v1.setOnClickListener {
                 if (!viewModel.addData(0)) showReachLimitSnackbar()
-
-                if (viewModel.list1.size == 1) countDownTimer1 = createCountDownTimer1().start()
             }
             v2.setOnClickListener {
-                if (!viewModel.addData(0)) showReachLimitSnackbar()
-
-                if (viewModel.list2.size == 1) countDownTimer2 = createCountDownTimer2().start()
+                if (!viewModel.addData(1)) showReachLimitSnackbar()
             }
             v3.setOnClickListener {
-                if (!viewModel.addData(0)) showReachLimitSnackbar()
-
-                if (viewModel.list3.size == 1) countDownTimer3 = createCountDownTimer3().start()
+                if (!viewModel.addData(2)) showReachLimitSnackbar()
             }
             v4.setOnClickListener {
-                if (!viewModel.addData(0)) showReachLimitSnackbar()
-
-                if (viewModel.list4.size == 1) countDownTimer4 = createCountDownTimer4().start()
+                if (!viewModel.addData(3)) showReachLimitSnackbar()
             }
 
             lifecycleScope.launch {
@@ -102,26 +98,90 @@ class TimerFragment : BaseFragment() {
             lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     confirmRevertViewModel.confirmClick.collect {
-                        when (viewModel.revertData()) {
-                            0 -> if (viewModel.list1.isEmpty()) {
-                                countDownTimer1?.cancel()
-                                countDownTimer1 = null
+                        viewModel.revertData()
+                    }
+                }
+            }
+
+            lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.list1UiState.collect { uiState ->
+                        when (uiState) {
+                            is ListUiState.TimeList -> {
+                                Timber.tag("yyy").d("list1UiState collect")
+                                viewModel.cacheList1.clear()
+                                viewModel.cacheList1.addAll(uiState.list)
+
+//                                if (adapter1.itemCount == uiState.list.size) adapter1.notifyDataSetChanged()
+//                                else
+                                Timber.tag("xxxxx").d("cached list: ${viewModel.cacheList1}")
+                                adapter1.submitList(viewModel.cacheList1.toList())
+
+                                if (countDownTimer1 == null && uiState.list.isNotEmpty()) countDownTimer1 =
+                                    createCountDownTimer1(uiState.list[0]).start()
                             }
 
-                            1 -> if (viewModel.list2.isEmpty()) {
-                                countDownTimer2?.cancel()
-                                countDownTimer2 = null
+                            else -> {}
+                        }
+                    }
+                }
+            }
+            lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.list2UiState.collect { uiState ->
+                        when (uiState) {
+                            is ListUiState.TimeList -> {
+                                viewModel.cacheList2.clear()
+                                viewModel.cacheList2.addAll(uiState.list)
+
+                                if (adapter2.itemCount == uiState.list.size) adapter2.notifyDataSetChanged()
+                                else adapter2.submitList(viewModel.cacheList2)
+
+                                if (countDownTimer2 == null && uiState.list.isNotEmpty()) countDownTimer2 =
+                                    createCountDownTimer2(uiState.list[1]).start()
                             }
 
-                            2 -> if (viewModel.list3.isEmpty()) {
-                                countDownTimer3?.cancel()
-                                countDownTimer3 = null
+                            else -> {}
+                        }
+                    }
+                }
+            }
+            lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.list3UiState.collect { uiState ->
+                        when (uiState) {
+                            is ListUiState.TimeList -> {
+                                viewModel.cacheList3.clear()
+                                viewModel.cacheList3.addAll(uiState.list)
+
+                                if (adapter3.itemCount == uiState.list.size) adapter3.notifyDataSetChanged()
+                                else adapter3.submitList(viewModel.cacheList3)
+
+                                if (countDownTimer3 == null && uiState.list.isNotEmpty()) countDownTimer3 =
+                                    createCountDownTimer3(uiState.list[2]).start()
                             }
 
-                            3 -> if (viewModel.list4.isEmpty()) {
-                                countDownTimer4?.cancel()
-                                countDownTimer4 = null
+                            else -> {}
+                        }
+                    }
+                }
+            }
+            lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.list4UiState.collect { uiState ->
+                        when (uiState) {
+                            is ListUiState.TimeList -> {
+                                viewModel.cacheList4.clear()
+                                viewModel.cacheList4.addAll(uiState.list)
+
+                                if (adapter4.itemCount == uiState.list.size) adapter4.notifyDataSetChanged()
+                                else adapter4.submitList(viewModel.cacheList4)
+
+                                if (countDownTimer4 == null && uiState.list.isNotEmpty()) countDownTimer4 =
+                                    createCountDownTimer4(uiState.list[3]).start()
                             }
+
+                            else -> {}
                         }
                     }
                 }
@@ -129,79 +189,74 @@ class TimerFragment : BaseFragment() {
         }
     }
 
-    private fun createCountDownTimer1(): CountDownTimer = object : CountDownTimer(viewModel.list1[0].percentage.roundToInt() * INTERVAL, INTERVAL) {
+    private fun createCountDownTimer1(time: Time): CountDownTimer = object : CountDownTimer(time.percentage.roundToInt() * INTERVAL, INTERVAL) {
         @SuppressLint("NotifyDataSetChanged")
         override fun onTick(p0: Long) {
             viewModel.onTick(0)
-            adapter1.notifyDataSetChanged()
         }
 
         override fun onFinish() {
+            countDownTimer1?.cancel()
+            countDownTimer1 = null
+
             val item = viewModel.doneData(0)
 
             if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showDoneDialog())
             doneViewModel.addData(item)
-
-            countDownTimer1?.cancel()
-            countDownTimer1 = null
-            if (viewModel.list1.isNotEmpty()) countDownTimer1 = createCountDownTimer1().start()
         }
     }
 
-    private fun createCountDownTimer2(): CountDownTimer = object : CountDownTimer(viewModel.list2[0].percentage.roundToInt() * INTERVAL, INTERVAL) {
-        @SuppressLint("NotifyDataSetChanged")
-        override fun onTick(p0: Long) {
-            viewModel.onTick(1)
-            adapter2.notifyDataSetChanged()
+    private fun createCountDownTimer2(time: Time): CountDownTimer =
+        object : CountDownTimer((time.percentage * INTERVAL).roundToInt().toLong(), INTERVAL) {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onTick(p0: Long) {
+                viewModel.onTick(1)
+            }
+
+            override fun onFinish() {
+                val item = viewModel.doneData(1)
+
+                if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showDoneDialog())
+                doneViewModel.addData(item)
+
+                countDownTimer2?.cancel()
+                countDownTimer2 = null
+            }
         }
 
-        override fun onFinish() {
-            val item = viewModel.doneData(1)
+    private fun createCountDownTimer3(time: Time): CountDownTimer =
+        object : CountDownTimer((time.percentage * INTERVAL).roundToInt().toLong(), INTERVAL) {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onTick(p0: Long) {
+                viewModel.onTick(2)
+            }
 
-            if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showDoneDialog())
-            doneViewModel.addData(item)
+            override fun onFinish() {
+                val item = viewModel.doneData(2)
 
-            countDownTimer2?.cancel()
-            countDownTimer2 = null
-            if (viewModel.list2.isNotEmpty()) countDownTimer2 = createCountDownTimer2().start()
-        }
-    }
+                if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showDoneDialog())
+                doneViewModel.addData(item)
 
-    private fun createCountDownTimer3(): CountDownTimer = object : CountDownTimer(viewModel.list3[0].percentage.roundToInt() * INTERVAL, INTERVAL) {
-        @SuppressLint("NotifyDataSetChanged")
-        override fun onTick(p0: Long) {
-            viewModel.onTick(2)
-            adapter3.notifyDataSetChanged()
-        }
-
-        override fun onFinish() {
-            val item = viewModel.doneData(2)
-
-            if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showDoneDialog())
-            doneViewModel.addData(item)
-
-            countDownTimer3?.cancel()
-            countDownTimer3 = null
-            if (viewModel.list3.isNotEmpty()) countDownTimer3 = createCountDownTimer3().start()
-        }
-    }
-
-    private fun createCountDownTimer4(): CountDownTimer = object : CountDownTimer(viewModel.list4[0].percentage.roundToInt() * INTERVAL, INTERVAL) {
-        @SuppressLint("NotifyDataSetChanged")
-        override fun onTick(p0: Long) {
-            viewModel.onTick(3)
-            adapter4.notifyDataSetChanged()
+                countDownTimer3?.cancel()
+                countDownTimer3 = null
+            }
         }
 
-        override fun onFinish() {
-            val item = viewModel.doneData(3)
+    private fun createCountDownTimer4(time: Time): CountDownTimer =
+        object : CountDownTimer((time.percentage * INTERVAL).roundToInt().toLong(), INTERVAL) {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onTick(p0: Long) {
+                viewModel.onTick(3)
+            }
 
-            if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showDoneDialog())
-            doneViewModel.addData(item)
+            override fun onFinish() {
+                val item = viewModel.doneData(3)
 
-            countDownTimer4?.cancel()
-            countDownTimer4 = null
-            if (viewModel.list4.isNotEmpty()) countDownTimer4 = createCountDownTimer4().start()
+                if (findNavController().currentDestination?.id == R.id.timer_fragment) findNavController().navigate(TimerFragmentDirections.showDoneDialog())
+                doneViewModel.addData(item)
+
+                countDownTimer4?.cancel()
+                countDownTimer4 = null
+            }
         }
-    }
 }
